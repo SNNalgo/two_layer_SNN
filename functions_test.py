@@ -1,7 +1,7 @@
 import functions
 import matplotlib.pyplot as plt
 import numpy as np
-import cPickle as pickle
+import pickle
 
 I = 4e-9*np.ones((1,1000))
 t = 0.1/1000

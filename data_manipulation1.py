@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.datasets import load_iris
 import random
-import cPickle as pickle
+import pickle
 
 data, target = load_iris(return_X_y=True)
 print (data.shape)

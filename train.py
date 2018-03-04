@@ -1,7 +1,7 @@
 import functions
 import matplotlib.pyplot as plt
 import numpy as np
-import cPickle as pickle
+import pickle
 
 input_file = open('iris_data_1.pickle','rb')
 load = pickle.load(input_file)
