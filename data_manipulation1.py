@@ -13,8 +13,8 @@ minVals = np.min(data, axis=0, keepdims=True)
 
 data = (data-minVals)/(maxVals-minVals)#scaling between 0 and 1
 
-centers = [0.2, 0.5, 0.7]
-sigma = 0.3
+centers = [0.25, 0.5, 0.75]
+sigma = 0.25
 extended_data = np.zeros((data.shape[0],len(centers)*data.shape[1]))
 for i in range(len(centers)):
     extended_data[:,i*data.shape[1]:(i+1)*data.shape[1]] = np.exp(-((data-centers[i])**2)/(2*(sigma**2)))

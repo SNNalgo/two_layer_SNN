@@ -11,7 +11,7 @@ nv,spikes = functions.LIF(I,t,Rp)
 n1 = 4
 n2 = 3
 spikes1,spikes2 = functions.init_spike_times(n1,n2)
-
+'''
 plt.figure()
 plt.plot(t*np.array(range(1000)),nv.T)
 plt.figure()
@@ -19,8 +19,7 @@ plt.plot(t*np.array(range(1000)),spikes.T)
 plt.show()
 '''
 pickle_file = open('iris_data_1.pickle','rb')
-load = pickle.load(pickle_file)
+load = pickle.load(pickle_file, encoding='latin1')
 
 data = load['data']
 targets = load['targets']
-'''
