@@ -3,7 +3,10 @@ from sklearn.datasets import load_iris
 import random
 import pickle
 
-data, target = load_iris(return_X_y=True)
+#data, target = load_iris(return_X_y=True)
+data_dict = load_iris()
+data = data_dict['data']
+target = data_dict['target']
 print (data.shape)
 print (target.shape)
 
@@ -13,14 +16,14 @@ minVals = np.min(data, axis=0, keepdims=True)
 
 data = (data-minVals)/(maxVals-minVals)#scaling between 0 and 1
 
-centers = [0.25, 0.5, 0.75]
+centers = [0.0, 0.5, 1.0]
 sigma = 0.25
 extended_data = np.zeros((data.shape[0],len(centers)*data.shape[1]))
 for i in range(len(centers)):
     extended_data[:,i*data.shape[1]:(i+1)*data.shape[1]] = np.exp(-((data-centers[i])**2)/(2*(sigma**2)))
-#print extended_data.shape
-a = range(np.max(target)+1)
-b = range(50)
+print (extended_data.shape)
+a = np.array(range(np.max(target)+1))
+b = np.array(range(50))
 random.shuffle(b)
 print (a)
 randomized_data = np.zeros(extended_data.shape)
