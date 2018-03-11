@@ -76,12 +76,45 @@ while loop>0:
         Iapp2 = -Ib*np.ones((n2,m)) #applied bias current
         Iapp2[targets[i],:] = 0
         bus1 = -10000*np.ones((n1,1))
-        spike_times1 = {}
-        spike_times1 = {}
+        bus2 = bus2-T
+        #spike_times1 = {}
+        #spike_times2 = {}
+        spike_times1,spike_times2 = functions.init_spike_times(n1,n2)
         for j in range(1,m):
             t = np.float64(j)*dt
             bus1[s1[:,j]>0]=t
             
+            #simulate voltages and currents
+            k1 = (1/c)*(-g*(v2[:,j-1,i]-el*np.ones((n2,1))) + Isyn12[:,j-1]+Isyn22[:,j-1]+Iapp2[:,j-1])
+            Vph = v2[:,j-1,i] + dt*k1
+            k2 = (1/c)*(-g*(Vph-el*np.ones((n2,1))) + Isyn12[:,j-1]+Isyn22[:,j-1]+Iapp2[:,j])
+            Vnew = v2[:,j-1,i] + dt*((k1+k2)/2)
+            v2[:,j,i] = Vnew
+            for k in range(n1):
+                if (s1[k,j]>0):
+                    spike_times1[k].append(t)
+                    dw_dn = gammaDn*(np.pow((w1[k,:]/wmax),mu))*((np.exp((bus2-t)/tauDn)).T)
+                    w1[k,:] = w1[k,:]+dw_dn
+                if (len(spike_times1[k])>0):
+                    np_times = np.array(spike_times1[k])
+                    Isyn12[:,j] = Isyn12[:,j]+I0*(w1[k,:].T)*(np.sum(np.exp((np_times-t)/tauM)-np.exp((np_times-t)/tauS)))
+            for k in range(n2):
+                if (Vnew[k]>vt):
+                    spike_times2[k].append(t)
+                    bus2[k,0] = t
+                    v2[k,j-1,i] = 0.1
+                    s2[k,j,i] = 1
+                    v2[k,j,i] = el
+                    dw1 = gammaUp*(np.pow((1-w1[:,k]/wmax),mu))*(np.exp((bus1-t)/tauUp))
+                    w1[:,k] = w1[:,k]+dw1
+                if (len(spike_times2[k])>0):
+                    np_times = np.array(spike_times2[k])
+                    Isyn22[:,j] = Isyn22[:,j]+I0n*(w2[k,:].T)*(np.sum(np.exp((np_times-t)/tauM2)))
+            w1[w1>wmax] = wmax
+            w1[w1<wmin] = wmin
     epoch = epoch+1
+    if (epoch%5 == 4):
+        success = functions.test_iris(w1,w2,level1_spikes,targets)
+        print("success % is : ",success)
     if (epoch == max_epoch):
         loop = 0

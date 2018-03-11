@@ -8,6 +8,9 @@ t = 0.1/1000
 Rp = 50*t
 
 nv,spikes = functions.LIF(I,t,Rp)
+n1 = 4
+n2 = 3
+spikes1,spikes2 = functions.init_spike_times(n1,n2)
 
 plt.figure()
 plt.plot(t*np.array(range(1000)),nv.T)
