@@ -31,13 +31,13 @@ tauM = 10e-3
 tauM2 = 50e-3
 tauS = tauM/4
 
-gammaUp = 1.7
+gammaUp = 2.0
 gammaDn = -2.7
 tauUp = 10e-3
 tauDn = 2*tauUp
 mu = 1.7
 
-w1 = np.random.randn(n1,n2)*20+300
+w1 = np.random.randn(n1,n2)*20+350
 w2 = np.random.randn(n2,n2)*100-8000
 
 wmax = 700
@@ -64,7 +64,7 @@ prev_w1 = w1
 num_train_samples = 45
 loop = 1
 epoch = 0
-max_epoch =  30
+max_epoch =  50
 print('starting')
 while loop>0:
     #one showing of the data
