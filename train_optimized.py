@@ -25,7 +25,7 @@ dt = 0.2e-3
 m = np.int32(T/dt)
 rp = 5e-3
 
-I0 = 10e-12
+I0 = 10e-4
 I0n = 1e-10
 tauM = 10e-3
 tauM2 = 50e-3
@@ -64,7 +64,7 @@ prev_w1 = w1
 num_train_samples = 45
 loop = 1
 epoch = 0
-max_epoch =  10
+max_epoch =  30
 print('starting')
 while loop>0:
     success = 0
@@ -85,23 +85,26 @@ while loop>0:
         spike_times1,spike_times2 = functions.init_spike_times(n1,n2)
         Iin = np.zeros(n2)
         Iin[targets[i]] = I0
+        #print(Iin)
         for j in range(1,m):
             t = np.float64(j)*dt
             bus1[s1[:,j]>0]=t
             if(np.sum(s1[:,j])>0):
                 v2curr = (v2prev-el)*np.exp(-(t-tprev)/tauM)+el
-                impulse = I0*np.sum(w1[s1[:,j]>0,:],axis=0)
+                impulse = Iin*np.sum(w1[s1[:,j]>0,:],axis=0)
                 v2curr = v2curr+impulse
                 s2[v2curr>vt,j,i] = 1
                 bus2[v2curr>vt] = t
                 dw_dn = gammaDn*(np.power((w1[s1[:,j]>0,:]/wmax),mu))*((np.exp((bus2-t)/tauDn)).T)
                 w1[s1[:,j]>0,:] = w1[s1[:,j]>0,:]+dw_dn
                 if(np.sum(s2[:,j,i])>0):
-                    pow_term = (np.power((1.0-w1[:,v2curr>vt]/wmax),mu))
+                    #print(v2curr)
+                    pow_term = (np.power((1.0-w1[:,v2curr>vt]/wmax),mu)).T
                     #print(pow_term.shape)
                     exp_term = (np.exp((bus1-t)/tauUp))
                     #print(exp_term.shape)
-                    dw1 = gammaUp*pow_term*exp_term
+                    dw1 = (gammaUp*pow_term*exp_term).T
+                    #print(dw1.shape)
                     w1[:,v2curr>vt] = w1[:,v2curr>vt] + dw1
                 v2curr[v2curr>vt] = vt
                 v2prev = v2curr
