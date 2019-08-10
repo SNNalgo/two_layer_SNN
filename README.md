@@ -1,1 +1,3 @@
-Spiking Neural Networks simulations
+Spiking Neural Networks simulations 
+done : two layer
+next : stan
